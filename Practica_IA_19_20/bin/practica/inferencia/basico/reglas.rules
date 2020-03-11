@@ -1,15 +1,6 @@
-// **RECUERDA** PRIORIDAD EN FUNCIÃ“N DEL ORDEN DE LAS REGLAS (LA SUPERIOR LA MÃS PRIORITARIA)
+// **RECUERDA** PRIORIDAD EN FUNCIÓN DEL ORDEN DE LAS REGLAS (LA SUPERIOR LA MÁS PRIORITARIA)
 
 
-rule prioridad1 {
-  declarations
-    practica.objetos.Herramienta h1;
-  preconditions
-    !h1.getNombre().equals("");		
-  actions
- 	h1.setNombre("FIN");
- 	// no se incluye "modified" para forzar que finalice la ejecuciÃ³n
-}
 
 rule hacer_tarea_limpieza {
   declarations
@@ -23,6 +14,7 @@ rule hacer_tarea_limpieza {
     w.getHabLimpiar()>0;	
   actions
  	t.setUnidades(t.getUnidades()-w.getHabLimpiar());
+ 	t.imprime(h,w);
  	modified(t);
 }
 

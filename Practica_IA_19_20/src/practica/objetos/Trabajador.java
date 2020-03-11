@@ -14,6 +14,7 @@ public class Trabajador {
 	int habPodar;
 	int habLimpiar;
 	int habReparar;
+	//Herramienta herramienta;
 	// AÑADIR LAS VARIABLES NECESARIAS
 
 	/**
@@ -25,6 +26,7 @@ public class Trabajador {
 		this.habPodar    = habPodar;
 		this.habLimpiar  = habLimpiar;
 		this.habReparar  = habReparar;
+		//this.herramienta = null;
 		// Añadir el estado inicial (estático) de las variables que se añadan
 		// Si se necesita añadir valores variables, como un ID, utilizar setters
 	}
@@ -56,5 +58,11 @@ public class Trabajador {
 	public void setHabReparar(int habReparar) {
 		this.habReparar = habReparar;
 	}
+	/*public Herramienta getHerramienta() {
+		return herramienta;
+	}
+	public void setHerramienta(Herramienta herramienta) {
+		this.herramienta = herramienta;
+	}*/
 
 }

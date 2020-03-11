@@ -50,7 +50,11 @@ public class Tarea {
 	public void setUnidades(int unidades) {
 		this.unidades = unidades;
 	}
-
+	
+	public void imprime(Herramienta h, Trabajador t) {
+		System.out.println("Unidades restantes: "+this.getUnidades()+" Herrmaienta: "+ h.getNombre() + " Trabajador:  "+ t.getNombre()  );
+	}
+	
 	
 
 
