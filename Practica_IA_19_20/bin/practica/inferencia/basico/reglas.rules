@@ -1,6 +1,13 @@
 // **RECUERDA** PRIORIDAD EN FUNCIÓN DEL ORDEN DE LAS REGLAS (LA SUPERIOR LA MÁS PRIORITARIA)
 
-
+rule tareas_hechas{
+declarations
+    practica.objetos.Tarea t;
+  preconditions
+    t.getUnidades()<=0;
+  actions
+ 	retract(t);
+}
 
 rule hacer_tarea_limpieza {
   declarations
@@ -11,6 +18,7 @@ rule hacer_tarea_limpieza {
     h.getTrabajo().equals("limpiar");
     t.getTipo().equals("limpiar");
     t.getUnidades()>0;
+    t.getArea().equals(w.getArea());
     w.getHabLimpiar()>0;	
   actions
  	t.setUnidades(t.getUnidades()-w.getHabLimpiar());
@@ -27,9 +35,11 @@ rule hacer_tarea_reparacion {
     h.getTrabajo().equals("reparar");
     t.getTipo().equals("reparar");
     t.getUnidades()>0;
+    t.getArea().equals(w.getArea());
     w.getHabReparar()>0;	
   actions
  	t.setUnidades(t.getUnidades()-w.getHabReparar());
+ 	t.imprime(h,w);
  	modified(t);
 }
 
@@ -42,10 +52,26 @@ rule hacer_tarea_poda {
     h.getTrabajo().equals("podar");
     t.getTipo().equals("podar");
     t.getUnidades()>0;
+    t.getArea().equals(w.getArea());
     w.getHabPodar()>0;	
   actions
  	t.setUnidades(t.getUnidades()-w.getHabPodar());
+ 	t.imprime(h,w);
  	modified(t);
+}
+
+rule moverse {
+  declarations
+    practica.objetos.Area a;
+    practica.objetos.Trabajador w;
+    practica.objetos.Tarea t;
+  preconditions
+  	t.getArea().equals(a.getNombre());
+   	a.esAdyacente(w.getArea());
+  actions
+  	w.setArea(a.getNombre());
+  	w.imprime();
+  	modified(w);
 }
 
 

@@ -44,4 +44,8 @@ public class Area {
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
+	
+	public boolean esAdyacente(String area) {
+		return this.adyacentes.contains(area);
+	}
 }
