@@ -22,7 +22,8 @@ import practica.objetos.Trabajador;
 public class MainClass {
 
 	public static void main(java.lang.String[] args) throws IOException {
-
+		
+		
 		/**
 		 * No se permite modificar el código desde aquí. Salvo el valor de printDebug o problemPath
 		 */
@@ -64,7 +65,6 @@ public class MainClass {
 		// Areas
 		
 		ArrayList<String> adyA= new ArrayList<String>();
-		adyA.add("R");
 		adyA.add("J2");
 		adyA.add("J3");
 		adyA.add("C2");
@@ -129,7 +129,7 @@ public class MainClass {
 		areas.add(J3);
 		areas.add(U);
 		areas.add(R);
-
+		
 
 		/**
 		 * No se permite modificar el código desde aquí

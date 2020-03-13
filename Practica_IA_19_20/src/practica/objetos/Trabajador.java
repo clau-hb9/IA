@@ -15,6 +15,8 @@ public class Trabajador {
 	int habLimpiar;
 	int habReparar;
 	String area;
+	String areaAnterior;
+	Herramienta herramienta;
 	// AÑADIR LAS VARIABLES NECESARIAS
 
 	/**
@@ -27,7 +29,8 @@ public class Trabajador {
 		this.habLimpiar  = habLimpiar;
 		this.habReparar  = habReparar;
 		this.area="A";
-		//this.herramienta = null;
+		this.areaAnterior="";
+		this.herramienta = null;
 		// Añadir el estado inicial (estático) de las variables que se añadan
 		// Si se necesita añadir valores variables, como un ID, utilizar setters
 	}
@@ -67,15 +70,26 @@ public class Trabajador {
 		this.area = area;
 	}
 	
-	public void imprime() {
-		System.out.println("Me muevo a: "+ this.getArea());
+	public String getAreaAnterior() {
+		return areaAnterior;
+	}
+	public void setAreaAnterior(String area) {
+		this.areaAnterior = area;
 	}
 	
-	/*public Herramienta getHerramienta() {
+	public void imprime(String tarea) {
+		System.out.println("Soy : "+this.getNombre()+" y Me muevo de: "+ this.getAreaAnterior()+" a: "+ this.getArea()
+		+ " y voy a : "+ tarea);
+	}
+	public void imprimeH() {
+		System.out.println("Soy : "+this.getNombre()+ " y He cogido : "+ this.getHerramienta().getNombre());
+	}
+	
+	public Herramienta getHerramienta() {
 		return herramienta;
 	}
 	public void setHerramienta(Herramienta herramienta) {
 		this.herramienta = herramienta;
-	}*/
+	}
 
 }
