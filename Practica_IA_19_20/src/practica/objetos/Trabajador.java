@@ -17,6 +17,7 @@ public class Trabajador {
 	String area;
 	String areaAnterior;
 	Herramienta herramienta;
+	int tiempo;
 	// AÑADIR LAS VARIABLES NECESARIAS
 
 	/**
@@ -82,7 +83,8 @@ public class Trabajador {
 		+ " y voy a : "+ tarea);
 	}
 	public void imprimeH() {
-		System.out.println("Soy : "+this.getNombre()+ " y He cogido : "+ this.getHerramienta().getNombre());
+		System.out.println("Soy : "+this.getNombre()+ " y He cogido : "+ this.getHerramienta().getNombre() + " y quedan "
+				+this.getHerramienta().getCantidad());
 	}
 	
 	public Herramienta getHerramienta() {
@@ -91,5 +93,21 @@ public class Trabajador {
 	public void setHerramienta(Herramienta herramienta) {
 		this.herramienta = herramienta;
 	}
-
+	public int getTiempo() {
+		return tiempo;
+	}
+	public int getTiempoHoras() {
+		return (tiempo/60);
+	}
+	public void setTiempo(int tiempo) {
+		this.tiempo = tiempo;
+	}
+	public void sumarTiempo() {
+		if (this.getHerramienta()!=null) {
+			this.setTiempo((int)(this.getTiempo()+5+this.getHerramienta().getPeso()));
+		}
+		else {
+			this.setTiempo(this.getTiempo()+5);
+		}
+	}
 }

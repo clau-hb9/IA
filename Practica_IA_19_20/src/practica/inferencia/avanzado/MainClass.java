@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import jeops.engine.KnowledgeBase;
 import practica.json.LectorJSON;
+import practica.objetos.Area;
 import practica.objetos.Herramienta;
 import practica.objetos.Tarea;
 import practica.objetos.Trabajador;
@@ -61,6 +62,72 @@ public class MainClass {
 		// Tareas
 		ArrayList<Tarea> tareas = readedTareas;
 		
+		ArrayList<String> adyA= new ArrayList<String>();
+		adyA.add("J2");
+		adyA.add("J3");
+		adyA.add("C2");
+		Area A = new Area("A",adyA);
+		
+		ArrayList<String> adyB= new ArrayList<String>();
+		adyB.add("U");
+		adyB.add("J1");
+		Area B = new Area("B",adyB);
+		
+		ArrayList<String> adyJ1= new ArrayList<String>();
+		adyJ1.add("U");
+		adyJ1.add("B");
+		adyJ1.add("C1");
+		adyJ1.add("J2");
+		Area J1 = new Area("J1",adyJ1);
+		
+		ArrayList<String> adyJ2= new ArrayList<String>();
+		adyJ2.add("U");
+		adyJ2.add("A");
+		adyJ2.add("C1");
+		adyJ2.add("C2");
+		adyJ2.add("J1");
+		Area J2 = new Area("J2",adyJ2);
+		
+		ArrayList<String> adyJ3= new ArrayList<String>();
+		adyJ3.add("R");
+		adyJ3.add("A");
+		adyJ3.add("C2");
+		Area J3 = new Area("J3",adyJ3);
+		
+		ArrayList<String> adyU= new ArrayList<String>();
+		adyU.add("B");
+		adyU.add("J1");
+		adyU.add("J2");
+		Area U = new Area("U",adyU);
+		
+		ArrayList<String> adyC1= new ArrayList<String>();
+		adyC1.add("C2");
+		adyC1.add("J1");
+		adyC1.add("J2");
+		Area C1 = new Area("C1",adyC1);
+		
+		ArrayList<String> adyC2= new ArrayList<String>();
+		adyC2.add("C1");
+		adyC2.add("A");
+		adyC2.add("J2");
+		adyC2.add("J3");
+		Area C2 = new Area("C2",adyC2);
+		
+		ArrayList<String> adyR= new ArrayList<String>();
+		adyR.add("J3");
+		Area R = new Area("R",adyR);
+
+		ArrayList<Area> areas = new ArrayList<Area>();
+		areas.add(A);
+		areas.add(B);
+		areas.add(C1);
+		areas.add(C2);
+		areas.add(J1);
+		areas.add(J2);
+		areas.add(J3);
+		areas.add(U);
+		areas.add(R);
+		
 		/**
 		 * No se permite modificar el código desde aquí
 		 */
@@ -78,6 +145,7 @@ public class MainClass {
 		for (int i = 0; i < herramientas.size(); i++) kb.join(herramientas.get(i));
 		for (int i = 0; i < trabajadores.size(); i++) kb.join(trabajadores.get(i));
 		for (int i = 0; i < tareas.size(); i++) kb.join(tareas.get(i));
+		for (int i = 0; i < areas.size(); i++) kb.join(areas.get(i));
 
 		// Impresión del estado final del problema		
 		System.out.println("--------------------------------------------------------");
@@ -108,6 +176,23 @@ public class MainClass {
 	 */
 	public static void printState(ArrayList<Herramienta> herramientas, ArrayList<Trabajador> trabajadores, ArrayList<Tarea> tareas) {
 		System.out.println("************** IMPRESION DEL ESTADO **************");
+		for (int i = 0; i< tareas.size(); i++) {
+			System.out.println(tareas.get(i).getTipo());
+			System.out.println(tareas.get(i).getUnidades());
+		}
+		System.out.println("****HORAS TRABAJADAS");
+		for (int i = 0; i< trabajadores.size(); i++) {
+			System.out.println(trabajadores.get(i).getNombre());
+			System.out.println((trabajadores.get(i).getTiempo()/60));
+		}
+		System.out.println("****LUGAR HERRAMIENTAS");
+		for (int i = 0; i< trabajadores.size(); i++) {
+			if(trabajadores.get(i).getHerramienta()!=null) {
+			System.out.println(trabajadores.get(i).getHerramienta().getNombre());
+			System.out.println(trabajadores.get(i).getHerramienta().getArea());
+			}
+		}
+		
 	}
 
 	/**

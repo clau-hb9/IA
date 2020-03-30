@@ -50,7 +50,13 @@ public class Tarea {
 	public void setUnidades(int unidades) {
 		this.unidades = unidades;
 	}
-	
+	public int medirUnidades(int actuales,int menos) {
+		int resta = actuales-menos;
+		if (resta<=0) {
+			return actuales;
+		}
+		else return resta;
+	}
 	public void imprime(Herramienta h, Trabajador t) {
 		System.out.println("Unidades restantes: "+this.getUnidades()+" Herrmaienta: "+ h.getNombre() + " Trabajador:  "+ t.getNombre()  );
 	}

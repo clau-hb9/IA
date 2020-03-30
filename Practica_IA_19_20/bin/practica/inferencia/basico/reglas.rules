@@ -209,3 +209,4 @@ rule moverse_almacen {
   	modified(h);
   	modified(a);
 }
+//major añadir atributo area a cada trabajador y asi me quito hacer 3 reglas
