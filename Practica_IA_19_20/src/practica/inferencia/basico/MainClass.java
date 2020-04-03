@@ -180,8 +180,14 @@ public class MainClass {
 	public static void printState(ArrayList<Herramienta> herramientas, ArrayList<Trabajador> trabajadores, ArrayList<Tarea> tareas) {
 		System.out.println("************** IMPRESION DEL ESTADO **************");
 		for (int i = 0; i< tareas.size(); i++) {
-			System.out.println(tareas.get(i).getTipo());
+			System.out.print(tareas.get(i).getArea()+ " ");
+			System.out.print(tareas.get(i).getTipo()+ " ");
 			System.out.println(tareas.get(i).getUnidades());
+		}
+		for (int i = 0; i< trabajadores.size(); i++) {
+			System.out.print(trabajadores.get(i).getNombre()+ " ");
+			System.out.println(trabajadores.get(i).getArea() + " ");
+
 		}
 	}
 

@@ -164,7 +164,6 @@ rule moverse_almacen_adyacente {
     practica.objetos.Trabajador w;
     practica.objetos.Tarea t;
   preconditions
-  //ES IGUAL QUE moverse_hacer_tarea_adyacente SIN LA CONDICION DE QUE EL TRABAJADOR TIENE LA HERRAMIENTA NECESARIA PARA HACER UNA TAREA
   	// Obligamos a que el area al que nos queremos desplazar sea el almacen
   	a.getNombre().equals("A");
   	// Si todavía hay tareas inacabadas
@@ -185,7 +184,6 @@ rule moverse_almacen {
     practica.objetos.Trabajador w;
     practica.objetos.Tarea t;
   preconditions
-  //ES IGUAL QUE moverse_hacer_tarea_adyacente SIN LA CONDICION DE QUE EL TRABAJADOR TIENE LA HERRAMIENTA NECESARIA PARA HACER UNA TAREA
   	// Si todavía hay tareas inacabadas
   	t.getUnidades() > 0;
   	// Si ese trabajador no ha pasado ya por ese area para ir al almacen --> Evitamos hacer comprobaciones repetidas
@@ -201,4 +199,40 @@ rule moverse_almacen {
   	modified(w);
   	modified(a);
 }
+rule dejar_herramienta_almacen_adyacente{
+ declarations
+    practica.objetos.Trabajador w;
+    practica.objetos.Area a;
+ 
+ preconditions
+ 	// Si el trabajador no está en el almacen ya
+    !w.getArea().equals("A");
+  	a.getNombre().equals("A");
+   	a.esAdyacente(w.getArea());
+ actions
+ 	w.setAreaAnterior(w.getArea());
+ 	// Establecemos que el trabajador esta en el almacén
+  	w.setArea(a.getNombre());
+  	// Sumamos el tiempo que ha tardado en desplazarse;
+  	w.sumarTiempo();
+  	
+  	modified(w);
+}
 
+rule dejar_herramienta_almacen{
+ declarations
+    practica.objetos.Trabajador w;
+    practica.objetos.Area a;
+ preconditions
+    !w.getArea().equals("A");
+   	!a.getVisitadaAlmacen(w.getNombre());
+ actions
+ 	w.setAreaAnterior(w.getArea());
+  	w.setArea(a.getNombre());
+  	a.setVisitadaAlmacen(true,w.getNombre());
+	// Sumamos el tiempo que ha tardado en desplazarse;
+  	w.sumarTiempo();
+  	
+  	modified(w);
+  	modified(a);
+}
