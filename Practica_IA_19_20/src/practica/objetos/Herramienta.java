@@ -16,7 +16,6 @@ public class Herramienta {
 	int mejora;
 	int cantidad;
 	// AÑADIR LAS VARIABLES NECESARIAS
-	String area;
 
 	/**
 	 * Constructor para el objeto
@@ -28,7 +27,6 @@ public class Herramienta {
 		this.peso = peso;
 		this.mejora = mejora;
 		this.cantidad = cantidad;
-		this.area="A";
 		// Añadir el estado inicial (estático) de las variables que se añadan
 		// Si se necesita añadir valores variables, como un ID, utilizar setters
 	}
@@ -68,11 +66,5 @@ public class Herramienta {
 	public void setCantidad(int cantidad) {
 		this.cantidad = cantidad;
 	}	
-	public String getArea() {
-		return area;
-	}
-	public void setArea(String area) {
-		this.area = area;
-	}
 
 }

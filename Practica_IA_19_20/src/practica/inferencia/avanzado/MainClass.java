@@ -189,7 +189,7 @@ public class MainClass {
 		for (int i = 0; i< trabajadores.size(); i++) {
 			if(trabajadores.get(i).getHerramienta()!=null) {
 			System.out.println(trabajadores.get(i).getHerramienta().getNombre());
-			System.out.println(trabajadores.get(i).getHerramienta().getArea());
+			System.out.println(trabajadores.get(i).getArea());
 			}
 		}
 		

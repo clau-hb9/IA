@@ -35,6 +35,17 @@ public class Trabajador {
 		// Añadir el estado inicial (estático) de las variables que se añadan
 		// Si se necesita añadir valores variables, como un ID, utilizar setters
 	}
+	public Trabajador(String nombre, int habPodar, int habLimpiar, int habReparar,String area, Herramienta h, int tiempo) {
+		this.nombre      = nombre;
+		this.habPodar    = habPodar;
+		this.habLimpiar  = habLimpiar;
+		this.habReparar  = habReparar;
+		this.area=area;
+		this.herramienta = h;
+		this.tiempo=tiempo;
+		// Añadir el estado inicial (estático) de las variables que se añadan
+		// Si se necesita añadir valores variables, como un ID, utilizar setters
+	}
 	
 	/**
 	 * Añadir (si procede) métodos auxiliares, como getters o setters

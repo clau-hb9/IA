@@ -2,6 +2,7 @@ package practica.busqueda.basico;
 
 import java.util.ArrayList;
 
+import practica.objetos.Area;
 import practica.objetos.Herramienta;
 import practica.objetos.Tarea;
 import practica.objetos.Trabajador;
@@ -24,17 +25,40 @@ public class Node {
 	ArrayList<Trabajador>  trabajadores;
 	ArrayList<Tarea>       tareas;
 	// Añadir más variables si se desea
-
+	//boolean tareasHechas [][];//matriz de booleanos que representa las tareas hechas como en el enunciado de la practica areas/tipoTareas
+	ArrayList<Area> areas;
+	//Area areaActual;
+	
 	/**
 	 * MODIFICAR
 	 * Constructor para introducir un nuevo nodo en el algoritmo A estrella
 	 */
-	public Node(Node parentNode, ArrayList<Herramienta> herramientas, ArrayList<Trabajador> trabajadores, ArrayList<Tarea> tareas) {
+	public Node(Node parentNode, ArrayList<Herramienta> herramientas, ArrayList<Trabajador> trabajadores, ArrayList<Tarea> tareas, ArrayList<Area> areas) {
 		this.parent       = parentNode;  // padre en el árbol A*
 		this.herramientas = herramientas;
 		this.trabajadores = trabajadores;
 		this.tareas       = tareas;
 		// Añadir más variables si se desea
+		this.areas=areas;
+/*		this.tareasHechas= new boolean [this.areas.size()][3];
+		for (int i = 0; i < areas.size(); i++) {
+			for (int j = 0; j < 3; j++) {
+				for (int k = 0; k < tareas.size(); k++) {
+					if (j==0&&tareas.get(k).getTipo().equals("podar")&&tareas.get(k).getArea().equals(areas.get(i).getNombre())) {
+						if(tareas.get(k).getUnidades()>0)tareasHechas[i][j]=false;
+						else tareasHechas[i][j]=true;
+					}
+					if (j==1&&tareas.get(k).getTipo().equals("limpiar")&&tareas.get(k).getArea().equals(areas.get(i).getNombre())) {
+						if(tareas.get(k).getUnidades()>0)tareasHechas[i][j]=false;
+						else tareasHechas[i][j]=true;
+					}
+					if (j==2&&tareas.get(k).getTipo().equals("reparar")&&tareas.get(k).getArea().equals(areas.get(i).getNombre())) {
+						if(tareas.get(k).getUnidades()>0)tareasHechas[i][j]=false;
+						else tareasHechas[i][j]=true;
+					}
+				}
+			}
+		}*/
 	}
 
 	/**
@@ -54,7 +78,10 @@ public class Node {
 		// Si se necesita añadir valores variables, como un ID, utilizar setters
 		ArrayList<Trabajador> trabajadores = new ArrayList<Trabajador>();
 		for (int i = 0; i < original.trabajadores.size(); i++) {
-			Trabajador trabajador = new Trabajador(original.trabajadores.get(i).getNombre(), original.trabajadores.get(i).getHabPodar(), original.trabajadores.get(i).getHabLimpiar(), original.trabajadores.get(i).getHabReparar());
+			Trabajador trabajador = new Trabajador(original.trabajadores.get(i).getNombre(), original.trabajadores.get(i).getHabPodar(), 
+					original.trabajadores.get(i).getHabLimpiar(), original.trabajadores.get(i).getHabReparar(), original.trabajadores.get(i).getArea(), 
+					original.trabajadores.get(i).getHerramienta(), original.trabajadores.get(i).getTiempo());
+			//añadir los demas atributos
 			trabajadores.add(trabajador);
 		}
 		this.trabajadores = trabajadores;
@@ -70,6 +97,65 @@ public class Node {
 			tareas.add(tarea);
 		}
 		this.tareas = tareas;
+		ArrayList<Area> areas = new ArrayList<Area>();
+		for (int i = 0; i < original.areas.size(); i++) {
+			Area area = new Area(original.areas.get(i).getNombre(),original.areas.get(i).getAdyacentes());
+			areas.add(area);
+			
+		}
+		this.areas = areas;
+		/*for (int i = 0; i < areas.size(); i++) {
+			for (int j = 0; j < 3; j++) {
+				this.tareasHechas[i][j]=true;
+			}
+		}*/
+		
+	}
+	public Node(Node original, Node parent) {
+		// Incluir todas las variables del nodo
+		this.cost        = original.cost;
+		this.heuristic   = original.heuristic;
+		this.evaluation   = original.evaluation;
+		this.parent       = parent;
+		// Añadir más variables si se desea
+
+		// Se copian los objetos de los ArrayList a uno nuevo de este Nodo
+		// Si se necesita añadir valores variables, como un ID, utilizar setters
+		ArrayList<Trabajador> trabajadores = new ArrayList<Trabajador>();
+		for (int i = 0; i < original.trabajadores.size(); i++) {
+			Trabajador trabajador = new Trabajador(original.trabajadores.get(i).getNombre(), original.trabajadores.get(i).getHabPodar(), 
+					original.trabajadores.get(i).getHabLimpiar(), original.trabajadores.get(i).getHabReparar(), original.trabajadores.get(i).getArea(), 
+					original.trabajadores.get(i).getHerramienta(), original.trabajadores.get(i).getTiempo());
+			//añadir los demas atributos
+			trabajadores.add(trabajador);
+		}
+		this.trabajadores = trabajadores;
+		ArrayList<Herramienta> herramientas = new ArrayList<Herramienta>();
+		for (int i = 0; i < original.herramientas.size(); i++) {
+			Herramienta herramienta = new Herramienta(original.herramientas.get(i).getNombre(), original.herramientas.get(i).getTrabajo(), 
+					original.herramientas.get(i).getPeso(), original.herramientas.get(i).getMejora(), original.herramientas.get(i).getCantidad());
+			herramientas.add(herramienta);
+		}
+		this.herramientas = herramientas;
+		ArrayList<Tarea> tareas = new ArrayList<Tarea>();
+		for (int i = 0; i < original.tareas.size(); i++) {
+			Tarea tarea = new Tarea(original.tareas.get(i).getTipo(), original.tareas.get(i).getArea(), original.tareas.get(i).getUnidades());
+			tareas.add(tarea);
+		}
+		this.tareas = tareas;
+		ArrayList<Area> areas = new ArrayList<Area>();
+		for (int i = 0; i < original.areas.size(); i++) {
+			Area area = new Area(original.areas.get(i).getNombre(),original.areas.get(i).getAdyacentes());
+			areas.add(area);
+			
+		}
+		this.areas = areas;
+		/*for (int i = 0; i < areas.size(); i++) {
+			for (int j = 0; j < 3; j++) {
+				this.tareasHechas[i][j]=true;
+			}
+		}*/
+		
 	}
 
 	/**
@@ -85,7 +171,15 @@ public class Node {
 	 */
 	public void computeHeuristic(Node finalNode) {
 		// MODIFICAR para ajustarse a las necesidades del problema
-		this.heuristic = 0;
+		//diferencias con el nodo final
+		int aux=0;
+		for (int i = 0; i < this.tareas.size(); i++) {
+			if(this.tareas.get(i).getUnidades()>0)aux++;
+		}
+		/*for (int i = 0; i < this.herramientas.size(); i++) {
+			if(!this.herramientas.get(i).getArea().equals("A"))aux++;
+		}*/
+		this.heuristic = aux;
 	}
 
 	/**
@@ -96,8 +190,35 @@ public class Node {
 	 * @return true: son iguales. false: no lo son
 	 */
 	public boolean equals(Node other) {
-		boolean check = true; // 
-		// MODIFICAR la condición para ajustarse a las necesidades del problema
+		boolean check=true;  
+		
+		for (int i = 0; i < this.tareas.size(); i++) {
+			if(this.tareas.get(i).getUnidades()!=other.tareas.get(i).getUnidades())check=false; //si no les quedan las mismas unidades de cada tarea
+		}
+		for (int i = 0; i < this.trabajadores.size(); i++) {
+			
+			if(other.trabajadores.get(i).getHerramienta()!=null&&this.trabajadores.get(i).getHerramienta()!=null) {//si sus trabajadores tienen una herramienta
+					
+					if(!this.trabajadores.get(i).getHerramienta().getNombre().equals(other.trabajadores.get(i).getHerramienta().getNombre())//si su herramienta es diferente
+					||
+					!this.trabajadores.get(i).getArea().equals(other.trabajadores.get(i).getArea())//si sus trabajadores estan en diferentes areas
+					||
+					this.trabajadores.get(i).getTiempoHoras()!=other.trabajadores.get(i).getTiempoHoras()//si el tiempo de trabajo de sus trabajadores es diferente
+					//SI HAN VISITADO LAS MISMAS AREAS
+					)check=false;
+			}
+		}
+		
+		return check;
+	}
+	public boolean equals(Node other,Node goal) {
+		boolean check=true;  
+		for (int i = 0; i < goal.tareas.size(); i++) {
+			if(goal.tareas.get(i).getUnidades()!=other.tareas.get(i).getUnidades())check=false; 
+		}
+		for (int i = 0; i < this.trabajadores.size(); i++) {
+			if(this.trabajadores.get(i).getArea()!=other.trabajadores.get(i).getArea())check=false; 
+		}
 		return check;
 	}
 
@@ -107,7 +228,13 @@ public class Node {
 	 * @param printDebug. Permite seleccionar cuántos mensajes imprimir
 	 */
 	public void printNodeData(int printDebug) {
-		
+		imprime();
+		System.out.println("mi coste es "+this.cost+" mi heurística es "+this.heuristic+" y mi estado es: ");
+		for (int i = 0; i < this.tareas.size(); i++) {
+					System.out.println(this.tareas.get(i).getUnidades());
+		}
+		System.out.println("*******");
+		System.out.println();
 	}
 
 	/**
@@ -132,6 +259,9 @@ public class Node {
 	}
 	public ArrayList<Trabajador> getTrabajadores() {
 		return trabajadores;
+	}
+	public ArrayList<Area> getAreas() {
+		return areas;
 	}
 	public void setTrabajadores(ArrayList<Trabajador> trabajadores) {
 		this.trabajadores = trabajadores;
@@ -169,4 +299,109 @@ public class Node {
 	public void setNextNode(Node nextNode) {
 		this.nextNodeList = nextNode;
 	}
+	
+	//METODOS NUEVOS
+	public ArrayList<String> getAdyacentes(String area) {
+		for (int i = 0; i < this.areas.size(); i++) {
+			if(areas.get(i).getNombre().equals(area)) {
+				return areas.get(i).getAdyacentes();
+			}
+		}
+		return null;
+	}
+	public int getUnidades(String area,String trabajo) {
+		for (int i = 0; i < this.tareas.size(); i++) {
+			if(tareas.get(i).getArea().equals(area)&&tareas.get(i).getTipo().equals(trabajo)) {
+				return tareas.get(i).getUnidades();
+			}
+		}
+		return 0;
+	}
+	public void setUnidades(String area,String trabajo, int unidades) {
+		for (int i = 0; i < this.tareas.size(); i++) {
+			if(this.tareas.get(i).getArea().equals(area)&&tareas.get(i).getTipo().equals(trabajo)) {
+				int resta = this.tareas.get(i).getUnidades() - unidades;
+				if(resta>0)this.tareas.get(i).setUnidades(resta);
+				else this.tareas.get(i).setUnidades(0);
+				break;
+			}
+		}
+	}
+
+	public void setHerramienta(int trabajador) {
+		// TODO Auto-generated method stub
+		Trabajador t =this.trabajadores.get(trabajador);
+		Herramienta ht = t.getHerramienta();						//herramienta del trabajador
+		for (int i = 0; i < this.herramientas.size(); i++) {				//recorremos las herramientas
+			Herramienta h = this.herramientas.get(i);
+			if(ht==null) {
+				t.setHerramienta(h);
+				h.setCantidad(h.getCantidad()-1);		
+				//cambiamos la herramienta
+				break;
+			}
+			else if(!h.getNombre().equals(ht.getNombre())&&h.getCantidad()>0&&this.hayTareas(h.getTrabajo())) {  //si es diferente de la que tenia, hay al menos 1 y quedan trabajos por hacer de ese tipo de herramienta
+				ht.setCantidad(ht.getCantidad()+1);							//devolvemos la del trbajador
+				t.setHerramienta(h);
+				h.setCantidad(h.getCantidad()-1);		
+				//cambiamos la herramienta
+				break;
+			}
+		}
+		
+	}
+	public boolean hayTareas(String trabajo) {
+		for (int i = 0; i < this.tareas.size(); i++) {
+			if(this.tareas.get(i).getTipo().equals(trabajo)&&this.tareas.get(i).getUnidades()>0) return true;
+		}
+		return false;
+	}
+	public void estadoFinal() {
+		for (int i = 0; i < this.tareas.size(); i++) {
+			this.tareas.get(i).setUnidades(0);
+		}
+		for (int i = 0; i < this.trabajadores.size(); i++) {
+			this.trabajadores.get(i).setArea("A");
+		}
+	}
+
+	public void imprime() {
+		for (int i = 0; i < this.trabajadores.size(); i++) {
+			Trabajador t = this.trabajadores.get(i);
+			if(t.getNombre().equals("Antonio")&&t.getHerramienta()!=null) {
+				System.out.println(" estoy en "+t.getArea()
+				+" tengo "+t.getHerramienta().getNombre()
+				+" me quedan por hacer "+this.getHeuristic()
+				+ " llevo currando "+ t.getTiempoHoras()+ " horas");
+			}
+		}
+	}
+	
+	public void moverTrabajador(int trabajador, String area) {
+		Trabajador t =this.trabajadores.get(trabajador);
+		t.setArea(area);
+		t.setTiempo((int) (t.getTiempo()+5+
+				t.getHerramienta().getPeso()));
+	}
+	
+	public void hacerTarea(int trabajador, String area) {
+		Trabajador t =this.trabajadores.get(trabajador);
+		while(this.getUnidades(area, t.getHerramienta().getTrabajo())>0) {
+			if(t.getHerramienta().getTrabajo().equals("limpiar"))this.setUnidades(area, t.getHerramienta().getTrabajo(),t.getHabLimpiar() + t.getHerramienta().getMejora() );
+			else if(t.getHerramienta().getTrabajo().equals("podar"))this.setUnidades(area, t.getHerramienta().getTrabajo(),t.getHabPodar() + t.getHerramienta().getMejora());
+			else this.setUnidades(area, t.getHerramienta().getTrabajo(),t.getHabReparar() + t.getHerramienta().getMejora());
+			t.setTiempo(t.getTiempo()+60);
+		}	
+	}
+	
+	
 }
+
+
+
+
+
+
+
+
+

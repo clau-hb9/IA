@@ -18,8 +18,6 @@ rule coger_primera_herramienta {
   preconditions
   	w.getArea().equals("A");
   	//si un trabajador esta en A
-  	nuevaH.getArea().equals("A");
-  	//si la herramienta a coger esta en A
   	nuevaH.getTrabajo().equals(t.getTipo());
   	//si la nueva herramienta vale para hacer una tarea inacabada
   	w.getHerramienta()==null;
@@ -84,7 +82,6 @@ rule moverse_hacer_tarea_adyacente {
     practica.objetos.Area a;
     practica.objetos.Trabajador w;
     practica.objetos.Tarea t;
-    practica.objetos.Herramienta h;
   preconditions
   	t.getArea().equals(a.getNombre()); 
   	//si en ese area hay una tarea por hacer
@@ -94,22 +91,13 @@ rule moverse_hacer_tarea_adyacente {
    	//si ese area es adyacente al area del trabajdor
    	!a.getNombre().equals(w.getAreaAnterior());
    	//si ese area no es de donde viene el trabajador(evitar bucles)
-   	h.getNombre().equals(w.getHerramienta().getNombre());
-   	//para seleccionar la herramienta del trabajador
-   	h.getArea().equals(w.getHerramienta().getArea());
-   	//para seleccionar la herramienta del trabajador
   actions
   	w.setAreaAnterior(w.getArea());
   	//fijamos area anterior como en el que se encuentra
   	w.setArea(a.getNombre());
   	//movemos al trabajador
-  	a.setVisitadaTarea(true,w.getHerramienta().getTrabajo());
-  	//poner ese area como visitada
-  	h.setArea(w.getArea());
-  	//cambiamos el area de la herramienta del trabajador ya que este se ha movido
   	w.imprime(t.getTipo());
   	modified(w);
-  	modified(h);
 }
 
 rule moverse_hacer_tarea {
@@ -117,7 +105,6 @@ rule moverse_hacer_tarea {
     practica.objetos.Area a;
     practica.objetos.Trabajador w;
     practica.objetos.Tarea t;
-    practica.objetos.Herramienta h;
   preconditions
   	a.esAdyacente(w.getArea());
    	//si ese area es adyacente al area del trabajdor
@@ -127,22 +114,15 @@ rule moverse_hacer_tarea {
    	//si no ha visitado ya ese area
    	!a.getNombre().equals(w.getAreaAnterior());
    	//si ese area no es de donde viene el trabajador(evitar bucles)
-   	h.getNombre().equals(w.getHerramienta().getNombre());
-   	//para seleccionar la herramienta del trabajador
-   	h.getArea().equals(w.getHerramienta().getArea());
-   	//para seleccionar la herramienta del trabajador
   actions
   	w.setAreaAnterior(w.getArea());
   	//fijamos area anterior como en el que se encuentra
   	w.setArea(a.getNombre());
   	//movemos al trabajador
-  	h.setArea(w.getArea());
-  	//cambiamos el area de la herramienta del trabajador ya que este se ha movido
   	a.setVisitadaTarea(true,w.getHerramienta().getTrabajo());
   	//poner ese area como visitada
   	w.imprime(t.getTipo());
   	modified(w);
-  	modified(h);
   	modified(a);
 }
 rule coger_herramienta {
@@ -153,11 +133,8 @@ rule coger_herramienta {
   preconditions
   	w.getArea().equals("A");
   	//si el trabajador esta en A
-  	nuevaH.getArea().equals("A");
-  	//si la nueva herramienta esta en A
   	nuevaH.getTrabajo().equals(t.getTipo());
   	//si vale para hacer una tarea inacabada
-  	
   actions
   	w.setHerramienta(nuevaH);
   	//cambiamos la herramienta del trabajador
@@ -170,43 +147,33 @@ rule moverse_almacen_adyacente {
     practica.objetos.Area a;
     practica.objetos.Trabajador w;
     practica.objetos.Tarea t;
-    practica.objetos.Herramienta h;
   preconditions
   //ES IGUAL QUE moverse_hacer_tarea_adyacente SIN LA CONDICION DE QUE EL TRABAJADOR TIENE LA HERRAMIENTA NECESARIA PARA HACER UNA TAREA
   	a.getNombre().equals("A");
   	t.getUnidades()>0;
    	a.esAdyacente(w.getArea());
    	//!a.getNombre().equals(w.getAreaAnterior());
-   	h.getNombre().equals(w.getHerramienta().getNombre());
-   	h.getArea().equals(w.getHerramienta().getArea());
   actions
   	w.setAreaAnterior(w.getArea());
   	w.setArea(a.getNombre());
-  	h.setArea(w.getArea());
   	w.imprime(t.getTipo());
   	modified(w);
-  	modified(h);
 }
 rule moverse_almacen {
   declarations
     practica.objetos.Area a;
     practica.objetos.Trabajador w;
     practica.objetos.Tarea t;
-    practica.objetos.Herramienta h;
   preconditions
   //ES IGUAL QUE moverse_hacer_tarea_adyacente SIN LA CONDICION DE QUE EL TRABAJADOR TIENE LA HERRAMIENTA NECESARIA PARA HACER UNA TAREA
   	t.getUnidades()>0;
    	!a.getVisitadaAlmacen(w.getNombre());
-   	h.getNombre().equals(w.getHerramienta().getNombre());
-   	h.getArea().equals(w.getHerramienta().getArea());
   actions
   	w.setAreaAnterior(w.getArea());
   	w.setArea(a.getNombre());
-  	h.setArea(w.getArea());
   	a.setVisitadaAlmacen(true,w.getNombre());
   	w.imprime(t.getTipo());
   	modified(w);
-  	modified(h);
   	modified(a);
 }
 //major añadir atributo area a cada trabajador y asi me quito hacer 3 reglas

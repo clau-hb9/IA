@@ -3,8 +3,9 @@ package practica.busqueda.basico;
 import java.util.ArrayList;
 import java.util.List;
 
-import practica.busqueda.avanzado.Node;
-import practica.busqueda.avanzado.OpenList;
+import practica.busqueda.basico.Node;
+import practica.busqueda.basico.OpenList;
+import practica.objetos.Area;
 import practica.objetos.Herramienta;
 import practica.objetos.Tarea;
 import practica.objetos.Trabajador;
@@ -35,8 +36,45 @@ public class AStar {
 	private void addAdjacentNodes(Node currentNode) {
 		// MODIFICAR para insertar las acciones específicas del problema
 		ArrayList<Trabajador> trabajadores  = currentNode.getTrabajadores();
-		ArrayList<Herramienta> herramientas = currentNode.getHerramientas();
-		ArrayList<Tarea> tareas             = currentNode.getTareas();
+		for (int i = 0; i < trabajadores.size(); i++) {//recorremos todos los trabajadores
+			if(trabajadores.get(i).getNombre().equals("Antonio")) {//en la parte basica solo nos interesa antonio
+				Trabajador t =trabajadores.get(i);
+				ArrayList<String> adyacentes = currentNode.getAdyacentes(t.getArea());//areas adyacentes a donde se encuentra antonio
+					for (int j = 0; j < adyacentes.size(); j++) {//crea un nodo para cada una de las areas a las que se puede mover antonio
+						Node newNode = new Node(currentNode,currentNode);
+						//si no tiene herramienta y esta en el almacen que coja una y le movemos al adyacente
+						if(newNode.trabajadores.get(i).getHerramienta()==null&&newNode.trabajadores.get(i).getArea().equals("A")){
+							newNode.setHerramienta(i);
+							
+							//movemos al trabajador y a su herramienta al area adyacente
+							newNode.moverTrabajador(i, adyacentes.get(j));
+						}
+						//si el adyacente es el almacen que se mueva al almacen y cambie de herramienta
+						else if(adyacentes.get(j).equals("A")) {
+							//movemos al trabajador y a su herramienta al area adyacente
+							newNode.moverTrabajador(i, adyacentes.get(j));
+						
+							newNode.setHerramienta(i);
+							
+						}
+						else {//si no es ningun caso de los anteriores, movemos al trabajador al area adyacente
+							//movemos al trabajador y a su herramienta al area adyacente
+							newNode.moverTrabajador(i, adyacentes.get(j));
+						}
+		
+						//si en el area adyacente hay una tarea por hacer y ese trabajador tiene la herramienta necesaria 
+						//que la haga hasta completarla
+						if(newNode.getUnidades(adyacentes.get(j), newNode.trabajadores.get(i).getHerramienta().getTrabajo())>0) {
+							newNode.hacerTarea(i, adyacentes.get(j));
+						}
+						
+						newNode.setCoste(currentNode.getCost()+(newNode.trabajadores.get(i).getHerramienta().getPeso()/10));		// calcula el coste de la acción y se lo suma al coste del padre
+						newNode.computeHeuristic(this.goalNode);								// genera su heurística
+						newNode.computeEvaluation();
+						this.openList.insertAtEvaluation(newNode);
+					}
+			}
+		}
 	}
 	
 	/**
@@ -51,9 +89,10 @@ public class AStar {
 			currentNode = this.openList.pullFirst(); 	// Extraemos el primero (la lista esta ordenada segun la funcion de evaluación)
 			if(checkNode(currentNode)) {				// Si el nodo ya se ha visitado con un coste menor (esta en la lista de explorados) lo ignoramos
 				currentNode.printNodeData(printDebug);
+				
 				closedList.add(currentNode); 			// Añadimos dicho nodo a la lista de explorados
 
-				if(this.getGoalNode().equals(currentNode)) {	// Si es el nodo meta hemos acabado y no hace falta continuar
+				if(this.getGoalNode().equals(currentNode,this.getGoalNode())) {	// Si es el nodo meta hemos acabado y no hace falta continuar
 					this.setGoalNode(currentNode);
 					this.setFindGoal(true);
 					break;
@@ -86,7 +125,6 @@ public class AStar {
 		initialNode.setCoste(0);					// el nodo inicial tiene coste cero
 		initialNode.computeEvaluation();			// coste + heurística
 		goalNode.computeHeuristic(goalNode);		// Debe ser 0, ya es el nodo final
-
 		// Genera la lista de nodos explorados y sin explorar
 		this.closedList = new ArrayList<Node>();
 		this.openList   = new OpenList();
