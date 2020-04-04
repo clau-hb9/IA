@@ -40,9 +40,9 @@ public class Trabajador {
 		this.habPodar    = habPodar;
 		this.habLimpiar  = habLimpiar;
 		this.habReparar  = habReparar;
-		this.area=area;
+		this.area = area;
 		this.herramienta = h;
-		this.tiempo=tiempo;
+		this.tiempo = tiempo;
 		// Añadir el estado inicial (estático) de las variables que se añadan
 		// Si se necesita añadir valores variables, como un ID, utilizar setters
 	}
@@ -94,10 +94,12 @@ public class Trabajador {
 		+ " y voy a : "+ tarea);
 	}
 	public void imprimeH() {
-		System.out.println("Soy : "+this.getNombre()+ " y He cogido : "+ this.getHerramienta().getNombre() + " y quedan "
+		System.out.println("Soy : "+this.getNombre()+ " y he cogido : "+ this.getHerramienta().getNombre() + " y quedan "
 				+this.getHerramienta().getCantidad());
 	}
-	
+	public void imprimeMaxHability() {
+		System.out.println("Soy : "+this.getNombre()+ " mi máxima habilidad es: "+ this.getMaxHability());
+	}
 	public Herramienta getHerramienta() {
 		return herramienta;
 	}
@@ -120,5 +122,27 @@ public class Trabajador {
 		else {
 			this.setTiempo(this.getTiempo()+5);
 		}
+	}
+	
+	public String getMaxHability() {
+		String habilidad="";
+		if(Math.max(this.habPodar, this.habLimpiar) == this.habPodar) {
+			if(Math.max(this.habPodar, this.habReparar) == this.habPodar) {
+				habilidad = "podar";
+			}
+			else {
+				habilidad = "reparar";
+			}
+		}
+		else{
+			if(Math.max(this.habReparar, this.habLimpiar) == this.habLimpiar) {
+				habilidad = "limpiar";
+			}
+			else {
+				habilidad = "reparar";
+			}
+
+		}
+		return habilidad;
 	}
 }
