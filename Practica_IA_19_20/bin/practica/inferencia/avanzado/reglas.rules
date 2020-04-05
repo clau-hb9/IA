@@ -4,7 +4,7 @@ rule tareas_hechas{
 declarations
     practica.objetos.Tarea t;
   preconditions
-    t.getUnidades()<=0;
+    t.getUnidades() <= 0;
     //si la tarea ya esta hecha que la elimine de la BHH
   actions
  	retract(t);

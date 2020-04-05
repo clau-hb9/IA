@@ -57,81 +57,12 @@ public class Area {
 		}
 	}
 	
-	//Reseteamos el mapa todo a false, cuando el trabajador llega a una tarea y la realiza
-	public void resetCasillas(String nombreTrabajador) {
-		if (nombreTrabajador.equals("Antonio")) {	
-					areas[0].casillaComprobada[0] = false;
-					areas[1].casillaComprobada[0] = false;
-					areas[2].casillaComprobada[0] = false;
-					areas[3].casillaComprobada[0] = false;
-					areas[4].casillaComprobada[0] = false;
-					areas[5].casillaComprobada[0] = false;
-					areas[6].casillaComprobada[0] = false;
-					areas[7].casillaComprobada[0] = false;
-					areas[8].casillaComprobada[0] = false;
-					
-	
-		}	
 		
-		/*else if (nombreTrabajador.equals("Bernardo")) {
-			for(int i = 0; i < areas.length; i++) {
-					areas[i].casillaComprobada[1] = false;
-			}
-		}
-		else if (nombreTrabajador.equals("Cristian")) {
-			for(int i = 0; i < areas.length; i++) {
-				areas[i].casillaComprobada[2] = false;
-			}
-			
-		}
-		else {
-			for(int i = 0; i < areas.length; i++) {
-				areas[i].casillaComprobada[3] = false;
-			}
-		}*/
-	}
-	
-	public boolean getComprobadaCasilla(String nombreTrabajador) {
-		if (nombreTrabajador.equals("Antonio")) {	
-			return this.casillaComprobada[0];
-		}
-		
-		else if (nombreTrabajador.equals("Bernardo")) {
-			return this.casillaComprobada[1];
-		}
-		
-		else if (nombreTrabajador.equals("Cristian")) {
-			return this.casillaComprobada[2];
-		}
-		
-		else {
-			return this.casillaComprobada[3];
-		}
-
-	}
-	
-	public void setComprobadaCasilla(String nombreTrabajador) {
-		if (nombreTrabajador.equals("Antonio")) {	
-			this.casillaComprobada[0] = true;
-		}
-		
-		else if (nombreTrabajador.equals("Bernardo")) {
-			this.casillaComprobada[1] = true ;
-		}
-		
-		else if (nombreTrabajador.equals("Cristian")) {
-			this.casillaComprobada[2] = true;
-		}
-		
-		else {
-			this.casillaComprobada[3] = true;
-		}
-	}
 	
 	public static Area[] getAreas() {
 		ArrayList<String> adyA= new ArrayList<String>();
-		adyA.add("J2");
 		adyA.add("J3");
+		adyA.add("J2");
 		adyA.add("C2");
 		Area A = new Area("A",adyA);
 		
@@ -142,29 +73,32 @@ public class Area {
 		
 		ArrayList<String> adyJ1= new ArrayList<String>();
 		adyJ1.add("U");
-		adyJ1.add("B");
 		adyJ1.add("C1");
 		adyJ1.add("J2");
+		adyJ1.add("B");
+
 		Area J1 = new Area("J1",adyJ1);
 		
 		ArrayList<String> adyJ2= new ArrayList<String>();
 		adyJ2.add("U");
-		adyJ2.add("A");
 		adyJ2.add("C1");
 		adyJ2.add("C2");
 		adyJ2.add("J1");
+		adyJ2.add("A");
+
 		Area J2 = new Area("J2",adyJ2);
 		
 		ArrayList<String> adyJ3= new ArrayList<String>();
+		adyJ3.add("C2");
 		adyJ3.add("R");
 		adyJ3.add("A");
-		adyJ3.add("C2");
 		Area J3 = new Area("J3",adyJ3);
 		
 		ArrayList<String> adyU= new ArrayList<String>();
-		adyU.add("B");
-		adyU.add("J1");
 		adyU.add("J2");
+		adyU.add("J1");
+		adyU.add("B");
+
 		Area U = new Area("U",adyU);
 		
 		ArrayList<String> adyC1= new ArrayList<String>();

@@ -1,14 +1,6 @@
 // **RECUERDA** PRIORIDAD EN FUNCIÓN DEL ORDEN DE LAS REGLAS (LA SUPERIOR LA MÁS PRIORITARIA)
 
-rule tareas_hechas{
-declarations
-    practica.objetos.Tarea t;
-  preconditions
-  	// Si la tarea ya esta hecha que la elimine de la BHH
-    t.getUnidades() <= 0;
-  actions
- 	retract(t);
-}
+
 
 rule coger_primera_herramienta {
   declarations
@@ -16,12 +8,13 @@ rule coger_primera_herramienta {
     practica.objetos.Tarea t;
     practica.objetos.Herramienta nuevaH;
   preconditions
+  	t.getUnidades() > 0;
   	// Si un trabajador esta en el Almacen
   	w.getArea().equals("A");
-  	// Si la nueva herramienta vale para hacer una tarea inacabada
-  	nuevaH.getTrabajo().equals(t.getTipo());
   	// Si el trabajador no tiene herramienta
   	w.getHerramienta() == null;
+  	// Si la nueva herramienta vale para hacer una tarea 
+  	nuevaH.getTrabajo().equals(t.getTipo());
   	// Inicialmente cogemos la herramienta de la mejor habilidad que tiene el trabajador
   	nuevaH.getTrabajo().equals(w.getMaxHability());
   	
@@ -38,9 +31,9 @@ rule hacer_tarea_limpieza {
   declarations
     practica.objetos.Tarea t;
     practica.objetos.Trabajador w;
-    practica.objetos.Area a;
     
   preconditions
+  	t.getUnidades() > 0;
   	// Si la herramienta del trabajador sirve para limpiar
     w.getHerramienta().getTrabajo().equals("limpiar");
     // Si la tarea a realizar es de limpiar
@@ -49,13 +42,11 @@ rule hacer_tarea_limpieza {
     t.getArea().equals(w.getArea());
     // Si el trabajador tiene habilidad para hacer esa tarea
     w.getHabLimpiar() > 0;
-    a.getNombre().equals(w.getArea());
     
     
   actions
   	// Determinamos las unidades finales de la tarea. Le restamos la habilidad del trabajador.
  	t.setUnidades(t.getUnidades() - w.getHabLimpiar());
- 	a.resetCasillas(w.getNombre());
  	t.imprime( w.getHerramienta(),w);
  	modified(t);
 }
@@ -64,9 +55,9 @@ rule hacer_tarea_reparacion {
   declarations
     practica.objetos.Tarea t;
     practica.objetos.Trabajador w;
-    practica.objetos.Area a;
     
   preconditions
+  	t.getUnidades() > 0;
    	// Si la herramienta del trabajador sirve para reparar
     w.getHerramienta().getTrabajo().equals("reparar");
     // Si la tarea a realizar es de reparar
@@ -75,13 +66,10 @@ rule hacer_tarea_reparacion {
     t.getArea().equals(w.getArea());
     // Si el trabajador tiene habilidad para hacer esa tarea
     w.getHabReparar() > 0;
-    a.getNombre().equals(w.getArea());
     
   actions
   	// Determinamos las unidades finales de la tarea. Le restamos la habilidad del trabajador.
- 	t.setUnidades(t.getUnidades() - w.getHabReparar());
- 	a.resetCasillas(w.getNombre());
- 	
+ 	t.setUnidades(t.getUnidades() - w.getHabReparar()); 	
  	t.imprime( w.getHerramienta(),w);
  	modified(t);
 }
@@ -90,9 +78,9 @@ rule hacer_tarea_poda {
   declarations
     practica.objetos.Tarea t;
     practica.objetos.Trabajador w;
-    practica.objetos.Area a;
     
   preconditions
+  	t.getUnidades() > 0;
    	// Si la herramienta del trabajador sirve para podar
     w.getHerramienta().getTrabajo().equals("podar");
     // Si la tarea a realizar es de podar
@@ -102,166 +90,66 @@ rule hacer_tarea_poda {
     // Si el trabajador tiene habilidad para hacer esa tarea
     w.getHabPodar() > 0;	
     
-        a.getNombre().equals(w.getArea());
     
   actions
   	// Determinamos las unidades finales de la tarea. Le restamos la habilidad del trabajador.
  	t.setUnidades(t.getUnidades() - w.getHabPodar());
- 	a.resetCasillas(w.getNombre());
 
  	t.imprime(w.getHerramienta(),w);
  	modified(t);
 }
 
-rule moverse_hacer_tarea_adyacente {
-  declarations
-    practica.objetos.Area a;
-    practica.objetos.Trabajador w;
-    practica.objetos.Tarea t;
-  preconditions
-  	//  Si el area al que nos vamos a desplazar tiene una tarea por hacer
-  	t.getArea().equals(a.getNombre()); 
-  	// Si el trabajador tiene la herramienta necesaria para hacer la tarea
-  	t.getTipo().equals(w.getHerramienta().getTrabajo()); 
-  	// Si al area a donde queremos ir es adyacente al area en el que esta el trabajador
-   	a.esAdyacente(w.getArea());
-   	// Si ese area no es de donde viene el trabajador(evitar bucles)
-   	!a.getNombre().equals(w.getAreaAnterior());
-  actions
-  	// Establecemos como area anterior del trabajador a la actual
-  	w.setAreaAnterior(w.getArea());
-  	// Desplazamos al trabajador a la nueva area 
-  	w.setArea(a.getNombre());
-  	w.imprime(t.getTipo());
-  	modified(w);
-}
 
 rule moverse_hacer_tarea {
   declarations
-    practica.objetos.Area a;
     practica.objetos.Trabajador w;
     practica.objetos.Tarea t;
+   practica.objetos.Area a;
   preconditions
-  	// Seleccionamos areas adyacentes a la que está el trabajador
-  	a.esAdyacente(w.getArea());
-  	!a.getNombre().equals("A");
-  	// Si ese trabajador no ha pasado ya por ese area con esa herramienta --> Evitamos hacer comprobaciones repetidas
-   	!a.getComprobadaCasilla(w.getNombre());
-   	// Si ese area no es de donde viene el trabajador(evitar bucles)
-   	//!a.getNombre().equals(w.getAreaAnterior());
-   	// Si el trabajador tiene la herramienta necesaria para hacer alguna tarea restante del mapa
-  	t.getTipo().equals(w.getHerramienta().getTrabajo()); 
-   	
+  	t.getUnidades() > 0;
+  	// Si el trabajador tiene la herramienta necesaria para hacer alguna tarea restante del mapa
+  	t.getTipo().equals(w.getHerramienta().getTrabajo());
   actions
-  	// Establecemos como area anterior del trabajador a la actual
-  	w.setAreaAnterior(w.getArea());
   	// Desplazamos al trabajador a la nueva area 
-  	w.setArea(a.getNombre());
-  	// Ponemos esta area como visitada con esa herramienta --> Evitamos hacer comprobaciones repetidas
-  	a.setComprobadaCasilla(w.getNombre());
+  	w.setArea(t.getArea());
+  	
   	w.imprime(t.getTipo());
   	modified(w);
-  	modified(a);
 }
 rule coger_herramienta {
   declarations
     practica.objetos.Trabajador w;
     practica.objetos.Tarea t;
     practica.objetos.Herramienta nuevaH;
-    practica.objetos.Area a;
     
   preconditions
   	// Si el trabajador llega al almacen
   	w.getArea().equals("A");
+  	t.getUnidades() > 0;
   	// Si está la herramienta necesaria para resolver alguna tarea del mapa
   	nuevaH.getTrabajo().equals(t.getTipo());
-  	a.getNombre().equals(w.getArea());
   	
   actions
   	// Le cambiamos la herramienta al trabajador
   	w.setHerramienta(nuevaH);
-  	a.resetCasillas(w.getNombre());
   	
   	w.imprimeH();
   	modified(w);
-  	modified(t);
 }
 
-rule moverse_almacen_adyacente {
-  declarations
-    practica.objetos.Area a;
-    practica.objetos.Trabajador w;
-    practica.objetos.Tarea t;
-  preconditions
-  	// Obligamos a que el area al que nos queremos desplazar sea el almacen
-  	a.getNombre().equals("A");
-  	// Si todavía hay tareas inacabadas
-  	t.getUnidades() > 0;
-  	// Si el almacen es adyacente al area donde está el trabajador 
-   	a.esAdyacente(w.getArea());
-  actions
-   	// Establecemos como area anterior del trabajador a la actual
-  	w.setAreaAnterior(w.getArea());
-  	// Desplazamos al trabajador al almacen
-  	w.setArea(a.getNombre());
-  	w.imprime(t.getTipo());
-  	modified(w);
-}
+
 rule moverse_almacen {
   declarations
-    practica.objetos.Area a;
     practica.objetos.Trabajador w;
-    practica.objetos.Tarea t;
   preconditions
-  	// Si todavía hay tareas inacabadas
-  	t.getUnidades() > 0;
-  	// Si ese trabajador no ha pasado ya por ese area para ir al almacen --> Evitamos hacer comprobaciones repetidas
-   	!a.getComprobadaCasilla(w.getNombre());
+  	!w.getArea().equals("A");
+  	   	
   actions
-   	// Establecemos como area anterior del trabajador a la actual
-  	w.setAreaAnterior(w.getArea());
   	// Desplazamos al trabajador al area
-  	w.setArea(a.getNombre());
-  	// Marcamos como visitada el area para llegar al almacen
-  	a.setComprobadaCasilla(w.getNombre());
-  	w.imprime(t.getTipo());
-  	modified(w);
-  	modified(a);
-}
-rule dejar_herramienta_almacen_adyacente{
- declarations
-    practica.objetos.Trabajador w;
-    practica.objetos.Area a;
- 
- preconditions
- 	// Si el trabajador no está en el almacen ya
-    !w.getArea().equals("A");
-  	a.getNombre().equals("A");
-   	a.esAdyacente(w.getArea());
- actions
- 	w.setAreaAnterior(w.getArea());
- 	// Establecemos que el trabajador esta en el almacén
-  	w.setArea(a.getNombre());
-  	// Sumamos el tiempo que ha tardado en desplazarse;
-  	w.sumarTiempo();
-  	
+  	w.setArea("A");
+  	w.imprimeAlmacen();
   	modified(w);
 }
 
-rule dejar_herramienta_almacen{
- declarations
-    practica.objetos.Trabajador w;
-    practica.objetos.Area a;
- preconditions
-    !w.getArea().equals("A");
-   	!a.getComprobadaCasilla(w.getNombre());
- actions
- 	w.setAreaAnterior(w.getArea());
-  	w.setArea(a.getNombre());
-  	a.setComprobadaCasilla(w.getNombre());
-	// Sumamos el tiempo que ha tardado en desplazarse;
-  	w.sumarTiempo();
-  	
-  	modified(w);
-  	modified(a);
-}
+
+

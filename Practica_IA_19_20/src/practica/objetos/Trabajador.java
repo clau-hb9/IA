@@ -100,6 +100,9 @@ public class Trabajador {
 	public void imprimeMaxHability() {
 		System.out.println("Soy : "+this.getNombre()+ " mi máxima habilidad es: "+ this.getMaxHability());
 	}
+	public void imprimeAlmacen() {
+		System.out.println("Soy : "+this.getNombre()+ " y me desplazo al almacen");
+	}
 	public Herramienta getHerramienta() {
 		return herramienta;
 	}
@@ -116,11 +119,11 @@ public class Trabajador {
 		this.tiempo = tiempo;
 	}
 	public void sumarTiempo() {
-		if (this.getHerramienta()!=null) {
-			this.setTiempo((int)(this.getTiempo()+5+this.getHerramienta().getPeso()));
+		if (this.getHerramienta() != null) {
+			this.setTiempo((int)(this.getTiempo() + 5 + this.getHerramienta().getPeso()));
 		}
 		else {
-			this.setTiempo(this.getTiempo()+5);
+			this.setTiempo(this.getTiempo() + 5);
 		}
 	}
 	
