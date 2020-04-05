@@ -104,7 +104,7 @@ rule moverse_hacer_tarea {
   declarations
     practica.objetos.Trabajador w;
     practica.objetos.Tarea t;
-   practica.objetos.Area a;
+   
   preconditions
   	t.getUnidades() > 0;
   	// Si el trabajador tiene la herramienta necesaria para hacer alguna tarea restante del mapa
