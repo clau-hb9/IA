@@ -2,16 +2,16 @@ package practica.busqueda.avanzado;
 
 import java.util.ArrayList;
 import java.util.List;
-import practica.objetos.Herramienta;
-import practica.objetos.Tarea;
-import practica.objetos.Trabajador;
+
+import practica.busqueda.avanzado.Node;
+import practica.busqueda.avanzado.OpenList;
 
 /**
  * Clase creada como base para la parte 2 de la práctica 2019-2020 de Inteligencia Artificial, UC3M, Colmenarejo
  *
  * @author Daniel Amigo Herrero
  * @author David Sánchez Pedroche
- *  
+ * 
  */
 
 public class AStar {
@@ -30,10 +30,34 @@ public class AStar {
 	 * @param currentNode - el nodo actual
 	 */
 	private void addAdjacentNodes(Node currentNode) {
-		// MODIFICAR para insertar las acciones específicas del problema
-		ArrayList<Trabajador> trabajadores  = currentNode.getTrabajadores();
-		ArrayList<Herramienta> herramientas = currentNode.getHerramientas();
-		ArrayList<Tarea> tareas             = currentNode.getTareas();
+		
+		Node newNode = new Node(currentNode,currentNode.herramientas,currentNode.trabajadores,currentNode.tareas);
+		Node newNode1 = new Node(currentNode,currentNode.herramientas,currentNode.trabajadores,currentNode.tareas);
+		
+				for (int i = 0; i < currentNode.trabajadores.size(); i++) {
+					
+						double hIniciales=newNode.trabajadores.get(i).getTiempoHorasDecimales();//horas antes de moverse
+						double hIniciales1=newNode1.trabajadores.get(i).getTiempoHorasDecimales();//horas antes de moverse
+						//si no tiene herramienta y esta en el almacen que coja una 
+						if (newNode1.hayTareas("podar")||newNode1.hayTareas("limpiar")||newNode1.hayTareas("reparar")) {
+							
+						
+						if(newNode1.trabajadores.get(i).getHerramienta()==null&&newNode1.trabajadores.get(i).getArea().equals("A")) {
+							
+							newNode1.setHerramienta(i);}
+							newNode1.moverTrabajador(i, newNode1.trabajadores.get(i).getHerramienta().getTrabajo());
+						}
+					
+						
+						double hFinales=newNode1.trabajadores.get(i).getTiempoHorasDecimales();//horas despues de moverse
+						 double resta=hFinales-hIniciales1;
+						newNode1.setCoste(newNode1.getCost() + resta);		// calcula el coste de la acción y se lo suma al coste del padre
+						this.guardarNodo(newNode1);
+						
+					
+				}
+				
+				
 	}
 	
 	/**
@@ -48,9 +72,10 @@ public class AStar {
 			currentNode = this.openList.pullFirst(); 	// Extraemos el primero (la lista esta ordenada segun la funcion de evaluación)
 			if(checkNode(currentNode)) {				// Si el nodo ya se ha visitado con un coste menor (esta en la lista de explorados) lo ignoramos
 				currentNode.printNodeData(printDebug);
+				
 				closedList.add(currentNode); 			// Añadimos dicho nodo a la lista de explorados
 
-				if(this.getGoalNode().equals(currentNode)) {	// Si es el nodo meta hemos acabado y no hace falta continuar
+				if(this.getGoalNode().equals(currentNode,this.getGoalNode())) {	// Si es el nodo meta hemos acabado y no hace falta continuar
 					this.setGoalNode(currentNode);
 					this.setFindGoal(true);
 					break;
@@ -83,7 +108,6 @@ public class AStar {
 		initialNode.setCoste(0);					// el nodo inicial tiene coste cero
 		initialNode.computeEvaluation();			// coste + heurística
 		goalNode.computeHeuristic(goalNode);		// Debe ser 0, ya es el nodo final
-
 		// Genera la lista de nodos explorados y sin explorar
 		this.closedList = new ArrayList<Node>();
 		this.openList   = new OpenList();
@@ -150,4 +174,38 @@ public class AStar {
 		this.goalNode = goalNode;
 	}
 
+	public void acciones(int i, Node newNode) {
+		double hIniciales=newNode.trabajadores.get(i).getTiempoHorasDecimales();//horas antes de moverse
+			//si no tiene herramienta y esta en el almacen que coja una 
+			if(newNode.trabajadores.get(i).getHerramienta()==null&&newNode.trabajadores.get(i).getArea().equals("A")){
+				newNode.setHerramienta(i);
+			}
+			//si no puede hacer nada con esa herramienta que se mueva al almacen y cambie de herramienta
+			if(!newNode.hayTareas(newNode.trabajadores.get(i).getHerramienta().getTrabajo())) {
+				
+				newNode.moverTrabajador(i, "almacen");
+			
+				newNode.setHerramienta(i);
+				
+			}
+			else {//que haga tareas sin hacer
+				newNode.moverTrabajador(i, newNode.trabajadores.get(i).getHerramienta().getTrabajo());
+				
+			}
+
+
+			double hFinales=newNode.trabajadores.get(i).getTiempoHorasDecimales();//horas despues de moverse
+			double resta=hFinales-hIniciales;
+			newNode.setCoste(newNode.getCost() + resta);		// calcula el coste de la acción y se lo suma al coste del padre
+	}
+	
+	public void guardarNodo(Node newNode) {
+		newNode.computeHeuristic(this.goalNode);								// genera su heurística
+		newNode.computeEvaluation();
+		System.out.println("posible:");
+		newNode.printNodeData(printDebug);
+		this.openList.insertAtEvaluation(newNode);
+		
+	}
+	
 }

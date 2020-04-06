@@ -9,7 +9,6 @@ import java.util.List;
 import practica.busqueda.basico.AStar;
 import practica.busqueda.basico.Node;
 import practica.json.LectorJSON;
-import practica.objetos.Area;
 import practica.objetos.Herramienta;
 import practica.objetos.Tarea;
 import practica.objetos.Trabajador;
@@ -70,77 +69,9 @@ public class MainClass {
 		ArrayList<Trabajador>  trabajadores = readedTrabajadores;
 		// Tareas
 		ArrayList<Tarea> tareas = readedTareas;
-		//Areas y sus adyacentes
-		ArrayList<String> adyA= new ArrayList<String>();
-		adyA.add("J2");
-		adyA.add("J3");
-		adyA.add("C2");
-		Area A = new Area("A",adyA);
-		
-		ArrayList<String> adyB= new ArrayList<String>();
-		adyB.add("U");
-		adyB.add("J1");
-		Area B = new Area("B",adyB);
-		
-		ArrayList<String> adyJ1= new ArrayList<String>();
-		adyJ1.add("U");
-		adyJ1.add("B");
-		adyJ1.add("C1");
-		adyJ1.add("J2");
-		Area J1 = new Area("J1",adyJ1);
-		
-		ArrayList<String> adyJ2= new ArrayList<String>();
-		adyJ2.add("U");
-		adyJ2.add("A");
-		adyJ2.add("C1");
-		adyJ2.add("C2");
-		adyJ2.add("J1");
-		Area J2 = new Area("J2",adyJ2);
-		
-		ArrayList<String> adyJ3= new ArrayList<String>();
-		adyJ3.add("R");
-		adyJ3.add("A");
-		adyJ3.add("C2");
-		Area J3 = new Area("J3",adyJ3);
-		
-		ArrayList<String> adyU= new ArrayList<String>();
-		adyU.add("B");
-		adyU.add("J1");
-		adyU.add("J2");
-		Area U = new Area("U",adyU);
-		
-		ArrayList<String> adyC1= new ArrayList<String>();
-		adyC1.add("C2");
-		adyC1.add("J1");
-		adyC1.add("J2");
-		Area C1 = new Area("C1",adyC1);
-		
-		ArrayList<String> adyC2= new ArrayList<String>();
-		adyC2.add("C1");
-		adyC2.add("A");
-		adyC2.add("J2");
-		adyC2.add("J3");
-		Area C2 = new Area("C2",adyC2);
-		
-		ArrayList<String> adyR= new ArrayList<String>();
-		adyR.add("J3");
-		Area R = new Area("R",adyR);
-
-		ArrayList<Area> areas = new ArrayList<Area>();
-		areas.add(R);
-		areas.add(U);
-		areas.add(B);
-		areas.add(C1);
-		areas.add(C2);
-		areas.add(J1);
-		areas.add(J2);
-		areas.add(J3);
-		areas.add(A);
-		
 
 		//-------- Se crean los inicializan los objetos para ejecutar la solución --------//
-		Node initialNode = new Node(null, herramientas, trabajadores, tareas, areas);
-		//initialNode.setAreaActual(A);
+		Node initialNode = new Node(null, herramientas, trabajadores, tareas);
 		Node goalNode    = new Node(initialNode);
 		goalNode.estadoFinal();
 		AStar aStar = new AStar(printDebug, initialNode, goalNode); // Se inicializa el A-Estrella

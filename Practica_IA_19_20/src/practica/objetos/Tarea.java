@@ -50,9 +50,9 @@ public class Tarea {
 	public void setUnidades(int unidades) {
 		this.unidades = unidades;
 	}
-	public int medirUnidades(int actuales, int menos) {
-		int resta = actuales - menos;
-		if (resta <= 0) {
+	public int medirUnidades(int actuales,int menos) {
+		int resta = actuales-menos;
+		if (resta<=0) {
 			return actuales;
 		}
 		else return resta;

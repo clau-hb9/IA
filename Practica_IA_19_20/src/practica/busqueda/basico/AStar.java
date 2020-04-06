@@ -5,10 +5,6 @@ import java.util.List;
 
 import practica.busqueda.basico.Node;
 import practica.busqueda.basico.OpenList;
-import practica.objetos.Area;
-import practica.objetos.Herramienta;
-import practica.objetos.Tarea;
-import practica.objetos.Trabajador;
 
 /**
  * Clase creada como base para la parte 2 de la práctica 2019-2020 de Inteligencia Artificial, UC3M, Colmenarejo
@@ -34,47 +30,38 @@ public class AStar {
 	 * @param currentNode - el nodo actual
 	 */
 	private void addAdjacentNodes(Node currentNode) {
-		// MODIFICAR para insertar las acciones específicas del problema
-		ArrayList<Trabajador> trabajadores  = currentNode.getTrabajadores();
-		for (int i = 0; i < trabajadores.size(); i++) {//recorremos todos los trabajadores
-			if(trabajadores.get(i).getNombre().equals("Antonio")) {//en la parte basica solo nos interesa antonio
-				Trabajador t =trabajadores.get(i);
-				ArrayList<String> adyacentes = currentNode.getAdyacentes(t.getArea());//areas adyacentes a donde se encuentra antonio
-					for (int j = 0; j < adyacentes.size(); j++) {//crea un nodo para cada una de las areas a las que se puede mover antonio
-						Node newNode = new Node(currentNode,currentNode);
-						//si no tiene herramienta y esta en el almacen que coja una y le movemos al adyacente
-						if(newNode.trabajadores.get(i).getHerramienta()==null&&newNode.trabajadores.get(i).getArea().equals("A")){
-							newNode.setHerramienta(i);
-							
-							//movemos al trabajador y a su herramienta al area adyacente
-							newNode.moverTrabajador(i, adyacentes.get(j));
-						}
-						//si el adyacente es el almacen que se mueva al almacen y cambie de herramienta
-						else if(adyacentes.get(j).equals("A")) {
-							//movemos al trabajador y a su herramienta al area adyacente
-							newNode.moverTrabajador(i, adyacentes.get(j));
+				Node newNode = new Node(currentNode,currentNode.getHerramientas(),currentNode.getTrabajadores(),currentNode.getTareas());
+				Node newNode1 = new Node(currentNode,currentNode.getHerramientas(),currentNode.getTrabajadores(),currentNode.getTareas());
+				for (int i = 0; i < newNode.trabajadores.size(); i++) {
+					if(newNode.trabajadores.get(i).getNombre().equals("Antonio")) {
+						double hIniciales=newNode.trabajadores.get(i).getTiempoHorasDecimales();//horas antes de moverse
+						double hIniciales1=newNode1.trabajadores.get(i).getTiempoHorasDecimales();//horas antes de moverse
+						//si no tiene herramienta y esta en el almacen que coja una 
+						if(newNode1.trabajadores.get(i).getHerramienta()==null&&newNode1.trabajadores.get(i).getArea().equals("A"))
+							newNode1.setHerramienta(i);
+						newNode1.moverTrabajador(i, newNode1.trabajadores.get(i).getHerramienta().getTrabajo());
 						
-							newNode.setHerramienta(i);
+						if(newNode.trabajadores.get(i).getHerramienta()==null&&newNode.trabajadores.get(i).getArea().equals("A"))
+							newNode.setHerramienta(i);						
+						else{
 							
-						}
-						else {//si no es ningun caso de los anteriores, movemos al trabajador al area adyacente
-							//movemos al trabajador y a su herramienta al area adyacente
-							newNode.moverTrabajador(i, adyacentes.get(j));
-						}
-		
-						//si en el area adyacente hay una tarea por hacer y ese trabajador tiene la herramienta necesaria 
-						//que la haga hasta completarla
-						if(newNode.getUnidades(adyacentes.get(j), newNode.trabajadores.get(i).getHerramienta().getTrabajo())>0) {
-							newNode.hacerTarea(i, adyacentes.get(j));
-						}
+							newNode.moverTrabajador(i, "almacen");
 						
-						newNode.setCoste(currentNode.getCost()+(newNode.trabajadores.get(i).getHerramienta().getPeso()/10));		// calcula el coste de la acción y se lo suma al coste del padre
-						newNode.computeHeuristic(this.goalNode);								// genera su heurística
-						newNode.computeEvaluation();
-						this.openList.insertAtEvaluation(newNode);
+							newNode.setHerramienta(i);}
+							
+			
+						double hFinales=newNode.trabajadores.get(i).getTiempoHorasDecimales();//horas despues de moverse
+						double resta=hFinales-hIniciales;
+						newNode.setCoste(newNode.getCost() + resta);		// calcula el coste de la acción y se lo suma al coste del padre
+						this.guardarNodo(newNode);
+						
+						 hFinales=newNode1.trabajadores.get(i).getTiempoHorasDecimales();//horas despues de moverse
+						 resta=hFinales-hIniciales1;
+						newNode1.setCoste(newNode1.getCost() + resta);		// calcula el coste de la acción y se lo suma al coste del padre
+						this.guardarNodo(newNode1);
 					}
-			}
-		}
+				}
+				
 	}
 	
 	/**
@@ -191,4 +178,38 @@ public class AStar {
 		this.goalNode = goalNode;
 	}
 
+	public void acciones(int i, Node newNode) {
+		double hIniciales=newNode.trabajadores.get(i).getTiempoHorasDecimales();//horas antes de moverse
+			//si no tiene herramienta y esta en el almacen que coja una 
+			if(newNode.trabajadores.get(i).getHerramienta()==null&&newNode.trabajadores.get(i).getArea().equals("A")){
+				newNode.setHerramienta(i);
+			}
+			//si no puede hacer nada con esa herramienta que se mueva al almacen y cambie de herramienta
+			if(!newNode.hayTareas(newNode.trabajadores.get(i).getHerramienta().getTrabajo())) {
+				
+				newNode.moverTrabajador(i, "almacen");
+			
+				newNode.setHerramienta(i);
+				
+			}
+			else {//que haga tareas sin hacer
+				newNode.moverTrabajador(i, newNode.trabajadores.get(i).getHerramienta().getTrabajo());
+				
+			}
+
+
+			double hFinales=newNode.trabajadores.get(i).getTiempoHorasDecimales();//horas despues de moverse
+			double resta=hFinales-hIniciales;
+			newNode.setCoste(newNode.getCost() + resta);		// calcula el coste de la acción y se lo suma al coste del padre
+	}
+	
+	public void guardarNodo(Node newNode) {
+		newNode.computeHeuristic(this.goalNode);								// genera su heurística
+		newNode.computeEvaluation();
+		System.out.println("posible:");
+		newNode.printNodeData(printDebug);
+		this.openList.insertAtEvaluation(newNode);
+		
+	}
+	
 }
