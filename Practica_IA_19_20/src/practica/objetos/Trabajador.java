@@ -19,7 +19,6 @@ public class Trabajador {
 	Herramienta herramienta;
 	int tiempo;
 	double tExacto;
-	// AÑADIR LAS VARIABLES NECESARIAS
 	int [][] coste = new int [9][9];
 
 	/**
@@ -31,24 +30,21 @@ public class Trabajador {
 		this.habPodar    = habPodar;
 		this.habLimpiar  = habLimpiar;
 		this.habReparar  = habReparar;
-		this.area="A";
-		this.areaAnterior=null;
+		this.area        = "A";
 		this.herramienta = null;
-		// Añadir el estado inicial (estático) de las variables que se añadan
-		// Si se necesita añadir valores variables, como un ID, utilizar setters
+		setCostes();
+		
 	}
 	public Trabajador(String nombre, int habPodar, int habLimpiar, int habReparar,String area, Herramienta h, double tiempo, String aAnterior) {
 		this.nombre      = nombre;
 		this.habPodar    = habPodar;
 		this.habLimpiar  = habLimpiar;
 		this.habReparar  = habReparar;
-		this.area=area;
-		this.areaAnterior=aAnterior;
+		this.area        = area;
+		this.areaAnterior= aAnterior;
 		this.herramienta = h;
-		this.tExacto=tiempo;
-		// Añadir el estado inicial (estático) de las variables que se añadan
-		// Si se necesita añadir valores variables, como un ID, utilizar setters
-		this.setCostes();
+		this.tExacto     = tiempo;
+		setCostes();
 	}
 	
 	/**
@@ -57,24 +53,31 @@ public class Trabajador {
 	public String getNombre() {
 		return nombre;
 	}
+	
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
+	
 	public int getHabPodar() {
 		return habPodar;
 	}
+	
 	public void setHabPodar(int habPodar) {
 		this.habPodar = habPodar;
 	}
+	
 	public int getHabLimpiar() {
 		return habLimpiar;
 	}
+	
 	public void setHabLimpiar(int habLimpiar) {
 		this.habLimpiar = habLimpiar;
 	}
+	
 	public int getHabReparar() {
 		return habReparar;
 	}
+	
 	public void setHabReparar(int habReparar) {
 		this.habReparar = habReparar;
 	}
@@ -82,6 +85,7 @@ public class Trabajador {
 	public String getArea() {
 		return area;
 	}
+	
 	public void setArea(String area) {
 		this.area = area;
 	}
@@ -89,51 +93,96 @@ public class Trabajador {
 	public String getAreaAnterior() {
 		return areaAnterior;
 	}
+	
 	public void setAreaAnterior(String area) {
 		this.areaAnterior = area;
 	}
-	
+		
 	public void imprime(String tarea) {
-		System.out.println("Soy : "+this.getNombre()+" y Me muevo de: "+ this.getAreaAnterior()+" a: "+ this.getArea()
-		+ " y voy a : "+ tarea);
+		System.out.println("Soy: "+this.getNombre()+" y voy a: "+ this.getArea()
+		+ " y voy a : "+ tarea + " con un coste: +"+ getTiempo());
 	}
+	
 	public void imprimeH() {
-		System.out.println("Soy : "+this.getNombre()+ " y He cogido : "+ this.getHerramienta().getNombre() + " y quedan "
-				+this.getHerramienta().getCantidad());
+		System.out.println("Soy : "+this.getNombre()+ " y he cogido : "+ this.getHerramienta().getNombre() + " y quedan "
+				+this.getHerramienta().getCantidad()+ " con un coste: +"+ getTiempo());
+	}
+	
+	public void imprimeMaxHability() {
+		System.out.println("Soy : "+this.getNombre()+ " mi máxima habilidad es: "+ this.getMaxHability());
+	}
+	
+	public void imprimeAlmacen() {
+		System.out.println("Soy : "+this.getNombre()+ " y me desplazo al almacen");
 	}
 	
 	public Herramienta getHerramienta() {
 		return herramienta;
 	}
+	
 	public void setHerramienta(Herramienta herramienta) {
 		this.herramienta = herramienta;
 	}
+	
 	public int getTiempo() {
 		return tiempo;
 	}
+	
 	public double getTiempoExacto() {
 		return tExacto;
 	}
+	
 	public int getTiempoHoras() {
 		return (tiempo/60);
 	}
+	
 	public double getTiempoHorasDecimales() {
 		return (double)this.getTiempoExacto()/60;
 	}
+	
 	public void setTiempo(int tiempo) {
 		this.tiempo = tiempo;
 	}
+	
 	public void setTiempoExacto(double tiempo) {
 		this.tExacto = tiempo;
 	}
-	public void sumarTiempo() {
-		if (this.getHerramienta()!=null) {
-			this.setTiempo((int)(this.getTiempo()+5+this.getHerramienta().getPeso()));
+	
+	public void sumarTiempo(String AreaActual , String AreaAnterior) {
+		int coste = getCoste(AreaActual , AreaAnterior);
+		System.out.println("Coste: " + coste);
+		System.out.println("Tiempo actual: "+ this.getTiempo());
+		if (this.getHerramienta() != null) {
+			this.setTiempo((int)(this.getTiempo() + (5 + this.getHerramienta().getPeso()) * coste));
 		}
 		else {
-			this.setTiempo(this.getTiempo()+5);
+			this.setTiempo(this.getTiempo() + (5 * coste));
 		}
+		System.out.println("Tiempo final: " + getTiempo());
 	}
+	
+	public String getMaxHability() {
+		String habilidad="";
+		if(Math.max(this.habPodar, this.habLimpiar) == this.habPodar) {
+			if(Math.max(this.habPodar, this.habReparar) == this.habPodar) {
+				habilidad = "podar";
+			}
+			else {
+				habilidad = "reparar";
+			}
+		}
+		else{
+			if(Math.max(this.habReparar, this.habLimpiar) == this.habLimpiar) {
+				habilidad = "limpiar";
+			}
+			else {
+				habilidad = "reparar";
+			}
+
+		}
+		return habilidad;
+	}
+	
 	public void setCostes() {
 		this.coste[0][0]=0;this.coste[0][1]=4;this.coste[0][2]=5;this.coste[0][3]=3;this.coste[0][4]=2;
 		this.coste[0][5]=4;this.coste[0][6]=3;this.coste[0][7]=1;this.coste[0][8]=2;
@@ -158,11 +207,11 @@ public class Trabajador {
 		
 		this.coste[8][8]=0;
 		
-		for (int i = 0; i < coste.length; i++) {
+		/*for (int i = 0; i < coste.length; i++) {
 			for (int j = 0; j < coste.length; j++) {
-				this.coste[j][i]=this.coste[j][i];
+				this.coste[j][i] = this.coste[j][i];
 			}
-		}
+		}*/
 		
 	}
 	
@@ -190,9 +239,12 @@ public class Trabajador {
 		if(i==8)return "A";
 		return null;
 	}
-	public int getCoste(String a1,String a2) {
-		int i=getIndex(a1);
-		int j=getIndex(a2);
+	
+	public int getCoste(String a1, String a2) {
+		int i = getIndex(a1);
+		int j = getIndex(a2);
+		System.out.println("index i: "+i+" index j: "+ j);
+
 		return this.coste[i][j];
 	}
 }
